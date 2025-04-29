@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> {
     List<EmployeeEntity> findAllByDepartment(DepartmentType departmentType);
     List<EmployeeEntity> findAllByNameContainingIgnoreCase(String name);
-    Optional<EmployeeEntity> findByEmailContainingIgnoreCase(String email);
+    Optional<EmployeeEntity> findByEmailIgnoreCase(String email);
 }

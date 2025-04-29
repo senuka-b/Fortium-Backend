@@ -75,11 +75,9 @@ public class EmployeeController {
             Employee update = employeeService.update(employee);
 
             return ResponseEntity.ok(update);
-        } catch (IdNullException e) {
+        } catch (IdNullException | EmployeeDoesNotExistException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
 
-        } catch (EmployeeDoesNotExistException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }

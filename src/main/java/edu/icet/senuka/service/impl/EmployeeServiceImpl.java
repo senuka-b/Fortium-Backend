@@ -79,7 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Optional<Employee> getByEmail(String email) throws EmployeeDoesNotExistException {
-        Optional<EmployeeEntity> employee = repository.findByEmailContainingIgnoreCase(email);
+        Optional<EmployeeEntity> employee = repository.findByEmailIgnoreCase(email);
 
         if (employee.isEmpty()) {
             throw new EmployeeDoesNotExistException(email);
