@@ -21,6 +21,7 @@ public class EmployeeEntity {
     private String email;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private DepartmentType department;
 
     @Column(nullable = false)
