@@ -16,7 +16,7 @@ public interface EmployeeService {
 
     List<Employee> getAllByName(String name);
     List<Employee> getAllByDepartment(DepartmentType departmentType);
-    Optional<Employee> getByEmail(String email);
+    Optional<Employee> getByEmail(String email) throws EmployeeDoesNotExistException;
 
     List<Employee> getAll();
 }

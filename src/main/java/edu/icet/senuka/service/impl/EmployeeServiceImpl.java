@@ -59,7 +59,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<Employee> getAllByName(String name) {
-        List<EmployeeEntity> all = repository.findAllByNameIgnoreCase(name);
+        List<EmployeeEntity> all = repository.findAllByNameContainingIgnoreCase(name);
 
         return all.stream()
                 .map(employeeEntity -> mapper.map(employeeEntity, Employee.class))
@@ -76,12 +76,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Optional<Employee> getByEmail(String email) {
-        Optional<EmployeeEntity> employee = repository.findByEmailIgnoreCase(email);
+    public Optional<Employee> getByEmail(String email) throws EmployeeDoesNotExistException {
+        Optional<EmployeeEntity> employee = repository.findByEmailContainingIgnoreCase(email);
 
-        return employee.isPresent()
-                ? Optional.of(mapper.map(employee, Employee.class))
-                : Optional.empty();
+        if (employee.isEmpty()) {
+            throw new EmployeeDoesNotExistException(email);
+        }
+
+        return Optional.of(mapper.map(employee.get(), Employee.class));
     }
 
     @Override
