@@ -25,9 +25,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee add(Employee employee) throws EmailNotUniqueException {
 
-        if (getByEmail(employee.getEmail()).isPresent()) {
-            throw new EmailNotUniqueException();
-        }
+        try {
+            if (getByEmail(employee.getEmail()).isPresent()) {
+                throw new EmailNotUniqueException();
+            }
+        } catch (EmployeeDoesNotExistException ignored) {}
 
         EmployeeEntity employeeEntity = repository.save(mapper.map(employee, EmployeeEntity.class));
 
