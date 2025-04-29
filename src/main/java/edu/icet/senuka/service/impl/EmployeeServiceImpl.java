@@ -2,6 +2,7 @@ package edu.icet.senuka.service.impl;
 
 import edu.icet.senuka.dto.Employee;
 import edu.icet.senuka.entity.EmployeeEntity;
+import edu.icet.senuka.errors.EmailNotUniqueException;
 import edu.icet.senuka.errors.EmployeeDoesNotExistException;
 import edu.icet.senuka.errors.IdNullException;
 import edu.icet.senuka.repository.EmployeeRepository;
@@ -22,7 +23,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final ModelMapper mapper;
 
     @Override
-    public Employee add(Employee employee) {
+    public Employee add(Employee employee) throws EmailNotUniqueException {
+
+        if (getByEmail(employee.getEmail()).isPresent()) {
+            throw new EmailNotUniqueException();
+        }
+
         EmployeeEntity employeeEntity = repository.save(mapper.map(employee, EmployeeEntity.class));
 
         return mapper.map(employeeEntity, Employee.class);
@@ -38,7 +44,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmployeeDoesNotExistException(employee.getId());
         }
 
-        return add(employee);
+        return mapper.map(repository.save(mapper.map(employee, EmployeeEntity.class)), Employee.class);
     }
 
     @Override
