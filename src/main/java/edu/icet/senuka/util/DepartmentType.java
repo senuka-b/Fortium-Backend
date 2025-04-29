@@ -1,5 +1,5 @@
 package edu.icet.senuka.util;
 
 public enum DepartmentType {
-    HR, IT, FINANCE, OPERATIONS
+    ALL, HR, IT, FINANCE, OPERATIONS
 }
