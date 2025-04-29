@@ -7,3 +7,5 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+jwt-key: HpU9jymOYKQK6UzxqTqD0c5lDL8ACRYqA7fdIQyLZzU= # This key is open for the demonstration purpose of this selection test only!

@@ -1,6 +1,7 @@
 package edu.icet.senuka.controller;
 
 import edu.icet.senuka.dto.Employee;
+import edu.icet.senuka.errors.EmailNotUniqueException;
 import edu.icet.senuka.errors.EmployeeDoesNotExistException;
 import edu.icet.senuka.errors.IdNullException;
 import edu.icet.senuka.service.EmployeeService;
@@ -45,17 +46,26 @@ public class EmployeeController {
     }
 
     @GetMapping("/{email}")
-    public ResponseEntity<Employee> getEmployeeByEmail(@PathVariable String email) {
-        return employeeService.getByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.noContent().build());
+    public ResponseEntity<?> getEmployeeByEmail(@PathVariable String email) {
+        try {
+            return ResponseEntity.ok(employeeService.getByEmail(email).get());
+
+        } catch (EmployeeDoesNotExistException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 
     @PostMapping
-    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<?> addEmployee(@RequestBody Employee employee) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(employeeService.add(employee));
+        } catch (EmailNotUniqueException e) {
+            return ResponseEntity.status((HttpStatus.BAD_REQUEST))
+                    .body("Emails are duplicated! Please enter a different email!");
+        }
     }
 
     @PutMapping
@@ -65,11 +75,9 @@ public class EmployeeController {
             Employee update = employeeService.update(employee);
 
             return ResponseEntity.ok(update);
-        } catch (IdNullException e) {
+        } catch (IdNullException | EmployeeDoesNotExistException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
 
-        } catch (EmployeeDoesNotExistException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }
