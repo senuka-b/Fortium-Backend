@@ -19,7 +19,7 @@ public class Employee {
     @Size(max = 100, message = "Name cannot be greater than 100 characters")
     private String name;
 
-    @Email
+    @Email(message = "Invalid email format")
     @NotEmpty
     private String email;
 
