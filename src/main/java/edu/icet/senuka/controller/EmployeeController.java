@@ -6,6 +6,7 @@ import edu.icet.senuka.errors.EmployeeDoesNotExistException;
 import edu.icet.senuka.errors.IdNullException;
 import edu.icet.senuka.service.EmployeeService;
 import edu.icet.senuka.util.DepartmentType;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -57,19 +58,24 @@ public class EmployeeController {
 
 
     @PostMapping
-    public ResponseEntity<?> addEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<?> addEmployee(@RequestBody @Valid Employee employee){
 
         try {
+
+            Employee add = employeeService.add(employee);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(employeeService.add(employee));
+                    .body(add);
         } catch (EmailNotUniqueException e) {
             return ResponseEntity.status((HttpStatus.BAD_REQUEST))
                     .body("Emails are duplicated! Please enter a different email!");
+        } catch (Exception e) {
+            return ResponseEntity.status((HttpStatus.BAD_REQUEST))
+                    .body("Invalid email and/or username format!");
         }
     }
 
     @PutMapping
-    public ResponseEntity<?> updateEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<?> updateEmployee(@RequestBody @Valid Employee employee) {
 
         try {
             Employee update = employeeService.update(employee);
